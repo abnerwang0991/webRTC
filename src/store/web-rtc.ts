@@ -18,6 +18,7 @@ export const useWebRTCStore = defineStore('webRTC', {
 		// 取得本地多媒體權限
 		async getUserMediaStream () {
 			console.log('🚀 ~ file: web-rtc.ts:13 ~ getUserMediaStream ~ getUserMediaStream', this.localVideoRef)
+			console.log('🚀 ~ file: web-rtc.ts:13 ~ getUserMediaStream ~ getUserMediaStream', this.remoteVideoRef)
 
 			try {
 				const stream = await navigator.mediaDevices.getUserMedia({
@@ -106,8 +107,8 @@ export const useWebRTCStore = defineStore('webRTC', {
 			// 建立本地對遠端的連線
 			this.localPeer = this.buildPeerConnection('remotePeer', configuration)
 			// 將本地的多媒體資訊添加到peer連線，以便傳輸到遠端
-			// this.localStream.getTracks()
-			// 	.forEach((track) => this.localPeer.addTrack(track, this.localStream))
+			this.localStream.getTracks()
+				.forEach((track) => this.localPeer.addTrack(track, this.localStream))
 			// 建立資料傳輸通道
 			this.datachannel = this.localPeer.createDataChannel('my local channel', {
 				negotiated: false

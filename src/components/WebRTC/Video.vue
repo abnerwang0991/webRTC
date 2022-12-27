@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useWebRTCStore } from 'stores/web-rtc'
+import { useWebRTCStore } from 'src/store/web-rtc'
 
 defineProps<{
     refName: 'localVideoRef' | 'remoteVideoRef'
@@ -9,8 +9,18 @@ const webRTCStore = useWebRTCStore()
 </script>
 
 <template>
-  <video
-    :ref="(el) => webRTCStore[refName] = el"
-    autoplay
-  />
+	<div class="row justify-center">
+		<video
+			:ref="(el) => webRTCStore[refName] = el"
+			autoplay
+			height="300px"
+		/>
+	</div>
+
 </template>
+
+<style>
+	video {
+		height: 300px;
+	}
+</style>
