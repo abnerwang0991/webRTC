@@ -11,12 +11,11 @@ const webRTCStore = useWebRTCStore()
 <template>
 	<div class="row justify-center">
 		<video
-			:ref="(el) => webRTCStore[refName] = el"
+			:ref="(el) => webRTCStore[refName] = el as HTMLMediaElement"
 			autoplay
 			height="300px"
 		/>
 	</div>
-
 </template>
 
 <style>

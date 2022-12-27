@@ -106,6 +106,17 @@ module.exports = {
 	"indent": ["error", "tab"],
 	"no-tabs": "off",
 
-	'vue/multi-word-component-names': 'off'
+	'vue/multi-word-component-names': 'off',
+	"vue/html-indent": [
+		"error",
+		"tab",
+		{
+			attribute: 1,
+			baseIndent: 1,
+			closeBracket: 0,
+			alignAttributesVertically: true,
+			ignores: [],
+		},
+	],
   }
 }

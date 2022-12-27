@@ -1,8 +1,6 @@
-export interface Todo {
-  id: number;
-  content: string;
-}
-
-export interface Meta {
-  totalCount: number;
+export interface PeerItem {
+	title: string
+	subtitle: string
+	refName: 'localVideoRef' | 'remoteVideoRef'
+	pcName: 'local' | 'remote'
 }

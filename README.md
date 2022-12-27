@@ -1,36 +1,7 @@
 # WebRTC (webrtc)
-
-webRTC
-
-## Install the dependencies
-```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
-
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js).
-"# webRTC" 
-"# webRTC" 
-"# webRTC" 
+取得攝影機及麥克風權限
+模擬建立P2P連線，分別代表本機及遠端
+在代表本機的區域顯示本機視訊
+在代表遠端的區域顯示本機傳過去的視訊
+並建立資料傳輸連線
+將本機輸入的文字傳給遠端

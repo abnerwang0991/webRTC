@@ -22,16 +22,20 @@ const chatMessages = {
 </script>
 
 <template>
-	<q-card bordered flat class="column justify-between q-mt-md chat">
+	<q-card
+		bordered
+		flat
+		class="column justify-between q-mt-md chat"
+	>
 		<q-card-section>
 			<q-scroll-area class="message-area">
 				<q-chat-message
-				v-for="(message, index) in chatMessages.messages"
-				:key="`${pcName}${index}`"
-				name="local"
-				:text="[message]"
-				:sent="chatMessages.sent"
-			/>
+					v-for="(message, index) in chatMessages.messages"
+					:key="`${pcName}${index}`"
+					name="local"
+					:text="[message]"
+					:sent="chatMessages.sent"
+				/>
 			</q-scroll-area>
 		</q-card-section>
 		<q-card-section>
