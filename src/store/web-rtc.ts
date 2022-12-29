@@ -5,11 +5,11 @@ export const useWebRTCStore = defineStore('webRTC', {
 	state: () => ({
 		localVideoRef: null as unknown as HTMLMediaElement,
 		remoteVideoRef: null as unknown as HTMLMediaElement,
-		localStream: null as unknown as MediaStream,
-		remoteStream: null as unknown as MediaStream,
-		localPeer: null as unknown as RTCPeerConnection,
-		remotePeer: null as unknown as RTCPeerConnection,
-		datachannel: null as unknown as RTCDataChannel,
+		localStream: null as unknown as MediaStream | null,
+		remoteStream: null as unknown as MediaStream | null,
+		localPeer: null as unknown as RTCPeerConnection | null,
+		remotePeer: null as unknown as RTCPeerConnection | null,
+		dataChannel: null as unknown as RTCDataChannel,
 		localMessages: [] as string[],
 		remoteMessages: [] as string[]
 	}),
@@ -17,9 +17,6 @@ export const useWebRTCStore = defineStore('webRTC', {
 	actions: {
 		// 取得本地多媒體權限
 		async getUserMediaStream () {
-			console.log('🚀 ~ file: web-rtc.ts:13 ~ getUserMediaStream ~ getUserMediaStream', this.localVideoRef)
-			console.log('🚀 ~ file: web-rtc.ts:13 ~ getUserMediaStream ~ getUserMediaStream', this.remoteVideoRef)
-
 			try {
 				const stream = await navigator.mediaDevices.getUserMedia({
 					audio: true,
@@ -31,6 +28,20 @@ export const useWebRTCStore = defineStore('webRTC', {
 			} catch (e) {
 				console.log('🚀 ~ file: web-rtc.ts:30 ~ start ~ e', e)
 			}
+		},
+
+		// 打開本地攝影
+		turnOnCamera () {
+			this.localVideoRef.srcObject = this.localStream
+			this.localStream?.getTracks()
+				.forEach((track) => { track.enabled = true })
+		},
+
+		// 關閉本地攝影
+		turnOffCamera () {
+			this.localVideoRef.srcObject = null
+			this.localStream?.getTracks()
+				.forEach((track) => { track.enabled = false })
 		},
 
 		/**
@@ -51,7 +62,7 @@ export const useWebRTCStore = defineStore('webRTC', {
 		*/
 		buildPeerConnection (label: 'localPeer' | 'remotePeer', configuration = {}) {
 			const peer = new RTCPeerConnection(configuration)
-			peer.onicecandidate = (e) => this.onIceCandidate(this[label], e)
+			peer.onicecandidate = (e) => this.onIceCandidate(this[label] as RTCPeerConnection, e)
 			return peer
 		},
 
@@ -83,20 +94,21 @@ export const useWebRTCStore = defineStore('webRTC', {
 		async onRemotePeerCreateAnswerSuccess (desc: RTCSessionDescriptionInit) {
 			try {
 				// 遠端透過setLocalDescription 將 answer 設為本身的 local description，並傳給本地
-				await this.remotePeer.setLocalDescription(desc)
+				await this.remotePeer?.setLocalDescription(desc)
 			} catch (e) {
 				console.log('🚀 ~ file: web-rtc.ts:57 ~ onRemotePeerCreateAnswerSuccess ~ e', e)
 			}
 			try {
 				// 本地收到遠端傳來的local description後，透過setRemoteDescription，將其設為remote description
-				await this.localPeer.setRemoteDescription(desc)
+				await this.localPeer?.setRemoteDescription(desc)
 			} catch (e) {
 				console.log('🚀 ~ file: web-rtc.ts:64 ~ onRemotePeerCreateAnswerSuccess ~ e', e)
 			}
 		},
 
 		gotRemoteStream (e: RTCTrackEvent) {
-			if (this.remoteVideoRef.srcObject !== e.streams[0]) {
+			if (this.remoteStream !== e.streams[0]) {
+				this.remoteStream = e.streams[0]
 				this.remoteVideoRef.srcObject = e.streams[0]
 			}
 		},
@@ -107,10 +119,10 @@ export const useWebRTCStore = defineStore('webRTC', {
 			// 建立本地對遠端的連線
 			this.localPeer = this.buildPeerConnection('remotePeer', configuration)
 			// 將本地的多媒體資訊添加到peer連線，以便傳輸到遠端
-			this.localStream.getTracks()
-				.forEach((track) => this.localPeer.addTrack(track, this.localStream))
+			this.localStream?.getTracks()
+				.forEach((track) => this.localPeer?.addTrack(track, this.localStream as MediaStream))
 			// 建立資料傳輸通道
-			this.datachannel = this.localPeer.createDataChannel('my local channel', {
+			this.dataChannel = this.localPeer.createDataChannel('my local channel', {
 				negotiated: false
 			})
 			// 建立遠端對本地的連線
@@ -138,10 +150,18 @@ export const useWebRTCStore = defineStore('webRTC', {
 			}
 		},
 
+		// 傳送訊息
 		send (data: string) {
-			console.log('🚀 ~ file: web-rtc.ts:133 ~ send ~ data', data)
 			this.localMessages.push(data)
-			this.datachannel.send(data)
+			this.dataChannel.send(data)
+		},
+
+		// 中斷連線
+		hangUp () {
+			this.localPeer?.close()
+			this.remotePeer?.close()
+			this.localPeer = null
+			this.remotePeer = null
 		}
 	}
 })

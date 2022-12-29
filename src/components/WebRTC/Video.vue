@@ -20,6 +20,8 @@ const webRTCStore = useWebRTCStore()
 
 <style>
 	video {
-		height: 300px;
+		width: 100%;
+		height: 400px;
+		object-fit: fill;
 	}
 </style>

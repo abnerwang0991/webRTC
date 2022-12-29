@@ -47,7 +47,7 @@ const chatMessages = {
 			>
 				<template #after>
 					<q-btn
-						:disable="!text"
+						:disable="!text || !webRTCStore.remotePeer"
 						icon="send"
 						round
 						dense
