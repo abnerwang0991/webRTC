@@ -30,14 +30,14 @@ const switchCamera = () => {
 </script>
 
 <template>
-	<section class="full-width q-px-lg">
-		<div class="row q-col-gutter-md">
+	<section class="full-width q-px-lg web-rtc">
+		<div class="row q-col-gutter-x-md">
 			<div
 				v-for="{title, subtitle, refName, pcName}, index in peers"
 				:key="`video${index}`"
 				flat
 				bordered
-				class="col-6"
+				class="col-12 col-md-6"
 			>
 				<q-card class="srceen">
 					<q-card-section class="q-py-sm">
@@ -55,7 +55,7 @@ const switchCamera = () => {
 				</q-card>
 			</div>
 		</div>
-		<div class="row justify-center q-col-gutter-sm q-mt-md">
+		<div class="row justify-center q-col-gutter-sm q-mt-sm web-rtc__btn-section">
 			<div>
 				<q-btn
 					color="primary"
@@ -102,3 +102,22 @@ const switchCamera = () => {
 		</div>
 	</section>
 </template>
+
+<style lang="scss">
+	.web-rtc {
+
+		@media (max-width: $breakpoint-sm-max) {
+				margin-top: 80px;
+			}
+
+		&__btn-section {
+
+			@media (max-width: $breakpoint-sm-max) {
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
+
+		}
+	}
+</style>

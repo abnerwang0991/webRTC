@@ -13,7 +13,6 @@ const webRTCStore = useWebRTCStore()
 		<video
 			:ref="(el) => webRTCStore[refName] = el as HTMLMediaElement"
 			autoplay
-			height="300px"
 		/>
 	</div>
 </template>
@@ -21,7 +20,7 @@ const webRTCStore = useWebRTCStore()
 <style>
 	video {
 		width: 100%;
-		height: 400px;
+		height: calc(100vh - 528px);
 		object-fit: fill;
 	}
 </style>

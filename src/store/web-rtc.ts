@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import { defineStore } from 'pinia'
+import { Dialog } from 'quasar'
 
 export const useWebRTCStore = defineStore('webRTC', {
 	state: () => ({
@@ -26,6 +27,10 @@ export const useWebRTCStore = defineStore('webRTC', {
 				this.localVideoRef.srcObject = stream
 				this.localStream = stream
 			} catch (e) {
+				Dialog.create({
+					title: '提示',
+					message: '找不到相關裝置或未允許相關權限'
+				})
 				console.log('🚀 ~ file: web-rtc.ts:30 ~ start ~ e', e)
 			}
 		},
