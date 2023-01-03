@@ -30,7 +30,7 @@ const switchCamera = () => {
 </script>
 
 <template>
-	<section class="full-width q-px-lg web-rtc">
+	<section class="full-width q-px-xs-none q-px-md-lg web-rtc">
 		<div class="row q-col-gutter-x-md">
 			<div
 				v-for="{title, subtitle, refName, pcName}, index in peers"
@@ -39,20 +39,22 @@ const switchCamera = () => {
 				bordered
 				class="col-12 col-md-6"
 			>
-				<q-card class="srceen">
-					<q-card-section class="q-py-sm">
-						<div class="text-subtitle1">
-							{{ title }}
-						</div>
-						<div class="text-caption">
-							{{ subtitle }}
-						</div>
-					</q-card-section>
-					<q-card-section class="q-pt-sm">
-						<Video :ref-name="refName" />
-						<Chat :pc-name="pcName" />
-					</q-card-section>
-				</q-card>
+				<div class="q-px-md q-px-md-none">
+					<q-card class="srceen">
+						<q-card-section class="q-py-sm">
+							<div class="text-subtitle1">
+								{{ title }}
+							</div>
+							<div class="text-caption">
+								{{ subtitle }}
+							</div>
+						</q-card-section>
+						<q-card-section class="q-pt-sm">
+							<Video :ref-name="refName" />
+							<Chat :pc-name="pcName" />
+						</q-card-section>
+					</q-card>
+				</div>
 			</div>
 		</div>
 		<div class="row justify-center q-col-gutter-sm q-mt-sm web-rtc__btn-section">
@@ -105,7 +107,6 @@ const switchCamera = () => {
 
 <style lang="scss">
 	.web-rtc {
-
 		@media (max-width: $breakpoint-sm-max) {
 				margin-top: 80px;
 			}
