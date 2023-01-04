@@ -2,6 +2,8 @@
 import Video from './Video.vue'
 import Chat from './Chat.vue'
 
+import { computed } from 'vue'
+
 import type { PeerItem } from '../models'
 
 import { useWebRTCStore } from 'src/store/web-rtc'
@@ -22,11 +24,28 @@ const peers: PeerItem[] = [
 	}
 ]
 
-let cameraOpen = true
-const switchCamera = () => {
-	cameraOpen ? webRTCStore.turnOffCamera() : webRTCStore.turnOnCamera()
-	cameraOpen = !cameraOpen
-}
+const buttons = computed(() => [
+	{
+		icon: 'lock_open',
+		disable: false,
+		action: webRTCStore.getUserMediaStream
+	},
+	{
+		icon: webRTCStore.cameraOpen ? 'videocam_off' : 'videocam',
+		disable: !webRTCStore.localStream,
+		action: webRTCStore.switchCamera
+	},
+	{
+		icon: 'video_call',
+		disable: !webRTCStore.localStream,
+		action: webRTCStore.connect
+	},
+	{
+		icon: 'call_end',
+		disable: !webRTCStore.remotePeer,
+		action: webRTCStore.hangUp
+	}
+])
 </script>
 
 <template>
@@ -58,47 +77,18 @@ const switchCamera = () => {
 			</div>
 		</div>
 		<div class="row justify-center q-col-gutter-sm q-mt-sm web-rtc__btn-section">
-			<div>
+			<div
+				v-for="{icon, disable, action } in buttons"
+				:key="icon"
+			>
 				<q-btn
-					color="primary"
-					icon="lock_open"
-					no-caps
-					outline
-					round
-					@click="webRTCStore.getUserMediaStream"
-				/>
-			</div>
-			<div>
-				<q-btn
-					:icon="cameraOpen ? 'videocam_off' : 'videocam'"
-					:disable="!webRTCStore.localStream"
+					:icon="icon"
+					:disable="disable"
 					color="primary"
 					no-caps
 					outline
 					round
-					@click="switchCamera"
-				/>
-			</div>
-			<div>
-				<q-btn
-					:disable="!webRTCStore.localStream"
-					color="primary"
-					icon="video_call"
-					no-caps
-					outline
-					round
-					@click="webRTCStore.connect"
-				/>
-			</div>
-			<div>
-				<q-btn
-					:disable="!webRTCStore.remotePeer"
-					color="primary"
-					icon="call_end"
-					no-caps
-					outline
-					round
-					@click="webRTCStore.hangUp"
+					@click="action"
 				/>
 			</div>
 		</div>

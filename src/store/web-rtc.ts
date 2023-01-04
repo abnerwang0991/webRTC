@@ -12,7 +12,8 @@ export const useWebRTCStore = defineStore('webRTC', {
 		remotePeer: null as unknown as RTCPeerConnection | null,
 		dataChannel: null as unknown as RTCDataChannel,
 		localMessages: [] as string[],
-		remoteMessages: [] as string[]
+		remoteMessages: [] as string[],
+		cameraOpen: false as boolean
 	}),
 
 	actions: {
@@ -26,6 +27,7 @@ export const useWebRTCStore = defineStore('webRTC', {
 
 				this.localVideoRef.srcObject = stream
 				this.localStream = stream
+				this.cameraOpen = true
 			} catch (e) {
 				Dialog.create({
 					title: '提示',
@@ -36,17 +38,11 @@ export const useWebRTCStore = defineStore('webRTC', {
 		},
 
 		// 打開本地攝影
-		turnOnCamera () {
-			this.localVideoRef.srcObject = this.localStream
+		switchCamera () {
+			this.cameraOpen = !this.cameraOpen
+			this.localVideoRef.srcObject = this.cameraOpen ? this.localStream : null
 			this.localStream?.getTracks()
-				.forEach((track) => { track.enabled = true })
-		},
-
-		// 關閉本地攝影
-		turnOffCamera () {
-			this.localVideoRef.srcObject = null
-			this.localStream?.getTracks()
-				.forEach((track) => { track.enabled = false })
+				.forEach((track) => { track.enabled = this.cameraOpen })
 		},
 
 		/**
